@@ -52,23 +52,79 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 			?>
 			</p>
 			<p>
-			<button type="button" id="btn_connect" class="btn">Connect</button>
+			<button type="button" id="btn_connect" class="btn btn-primary">Connect</button>
 			</p>
 		</form>
 		
 		<h4 id="tbl_label" style="display:none;">Tables</h4>
-		<div id="tables"></div>
+		<div id="tables" style="display:none;"></div>
 		
 		<h4 id="fields_label" style="display:none;">Fields</h4>
-		<div id="fields"></div>
+		<div id="fields" style="display:none;"></div>
 
 		<h4 id="forms_label" style="display:none;">Form</h4>
-		<div id="form_container">
+		<div id="form_container" style="display:none;">
 			
 		</div>
 		<button type="button" id="btn_generate" class="btn" style="display:none;">Generate</buton>
 
+		<div id="database_data">
+			<label for="text_database">Database</label>
+			<select name="text_database" id="text_database">
+				<option value=""></option>
+			</select>	
+		</div><!--/#database_data-->
+
 	</div><!--/.container-->
+	<div id="formfield_customizer" class="modal hide fade in" style="display: none; ">
+	    <div class="modal-header">
+	      <a class="close" data-dismiss="modal">x</a>
+	      <h3>Customize Form Field</h3>
+	    </div>
+	    <div class="modal-body">
+			<label for="data_type">Type</label>
+			<select name="data_type" id="data_type">
+				<option value="text">text</option>
+				<option value="radio">radio</option>
+				<option value="checkbox">checkbox</option>
+				<option value="textarea">textarea</option>
+				<option value="button">button</option>
+			</select>
+
+			<label for="min_length">Min Length</label>
+			<input type="text" name="min_length" id="min_length" class="input-mini"/>
+
+			<label for="max_length">Max Length</label>
+			<input type="text" name="max_length" id="max_length" class="input-mini"/>
+
+			<label for="help_text">Help Text</label>
+			<input type="text" name="help_text" id="help_text"/>
+
+			<label for="field_data">Field Data</label>
+			<textarea id="field_data" name="field_data"></textarea>
+			<button type="button" id="btn_fielddata" class="btn">Data</button>
+
+			<label for="placeholder_text">Placeholder</label>
+			<input type="text" name="placeholder_text" id="placeholder_text"/>
+
+			<label for="options_text">Options</label>
+			<input type="text" name="options_text" id="options_text" class="input-large"/>
+
+			<label for="datalist_id">Datalist ID</label>
+			<input type="text" name="datalist_id" id="datalist_id"/>
+
+			<label for="datalist_data">Datalist Data</label>
+			<textarea id="datalist_data" name="datalist_data"></textarea>
+			<button type="button" id="btn_datalistdata" class="btn">Data</button>
+
+			<label for="classes">Classes</label>
+			<input type="text" name="classes" id="classes" class="input-large"/>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#" id="btn_updatefield" class="btn btn-success">Update</a>
+	      <a href="#" class="btn" data-dismiss="modal">Close</a>
+	    </div>
+	</div>
 </body>
 
 
@@ -81,36 +137,38 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 <!--templates-->
 <script id="input_text" type="text/html">
 	<div class="control-group">
-      <label class="control-label" for="{{id}}">{{label}}</label>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
         <div class="controls">
-          <input type="text" id="{{id}}" class="{{#classes}}{{.}} {{/classes}}" placeholder="{{placeholder}}" {{#options}}{{.}} {{/options}}>
+          <input type="text" id="{{input_id}}" class="edit_field {{#classes}}{{.}} {{/classes}}" placeholder="{{placeholder}}" {{#options}}{{.}} {{/options}}>
         </div>
     </div>
 </script><!--/#input_text-->
 
 
 <script id="input_checkbox" type="text/html">
-	<label class="checkbox {{#classes}}{{.}} {{/classes}}">
-	  <input type="checkbox" name="{{name}}" value="{{value}}" {{#options}}{{.}} {{/options}}>
-	  	{{label}}
+	<label class="checkbox {{#classes}}{{.}} {{/classes}}" contenteditable="true">
+	  <input type="checkbox" name="{{name}}" class="edit_field" value="{{value}}" {{#options}}{{.}} {{/options}}>
+	  	{{input_id}}
 	</label>
 </script><!--/#input_checkbox-->
 
 
 <script id="input_radio" type="text/html">
-	<label class="radio {{#classes}}{{.}} {{/classes}}">
-	  <input type="radio" name="{{name}}" value="{{value}}" {{#options}}{{.}} {{/options}}>
-	  	{{label}}
+	<label class="radio {{#classes}}{{.}} {{/classes}}" contenteditable="true">
+	  <input type="radio" name="{{name}}" class="edit_field" value="{{value}}" {{#options}}{{.}} {{/options}}>
+	  	{{input_id}}
 	</label>
 </script><!--/#input_radio-->
 
 
 <script id="input_textarea" type="text/html">
+	<label class="{{#classes}}{{.}} {{/classes}}" class="edit_field" contenteditable="true">{{input_id}}</label>
 	<textarea rows="{{rows}}"></textarea>
 </script><!--/#input_textarea-->
 
 
 <script id="input_select" type="text/html">
+	<label class="{{#classes}}{{.}} {{/classes}}" class="edit_field" contenteditable="true">{{input_id}}</label>
 	<select>
 	{{#option}}
 	  <option value="{{option_text}}">{{option_text}}</option>
@@ -120,20 +178,23 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
 
 <script id="input_prepend" type="text/html">
+	<label class="{{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
 	<div class="input-prepend">
-  		<span class="add-on">{{prepend_text}}</span><input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}">
+  		<span class="add-on">{{prepend_text}}</span><input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{input_id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}">
   	</div>
 </script><!--/#input_prepend-->
 
 
 <script id="input_append" type="text/html">
+	<label class="{{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
 	<div class="input-append">
-	  	<input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on">{{append_text}}</span>
+	  	<input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{input_id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on">{{append_text}}</span>
 	</div>
 </script><!--/#input_append-->
 
 
 <script id="input_combined" type="text/html">
+	<label class="{{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
 	<div class="input-prepend input-append">
 	 	<span class="add-on {{#append_classes}}{{.}} {{/append_classes}}">{{prepend_text}}</span><input class="span2" id="{{id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on {{#append_classes}}{{.}} {{/append_classes}}">{{append_text}}</span>
 	</div>
@@ -174,6 +235,7 @@ $('#btn_connect').click(function(){
 				}
 				
 				tbl_container[0].appendChild(fragment);
+				$('#tables').show();
 			}
 	);
 });
@@ -225,7 +287,7 @@ $('#tables').on('click', '.tables', function(){
 
 				new_container[0].appendChild(fragment);
 				field_container[0].appendChild(new_container[0]);
-				$('#fields_label').show();
+				$('#fields, #fields_label').show();
 			}
 		);
 	}
@@ -254,36 +316,27 @@ $('#fields').on('click', '.fields', function(){
 			form_type = "radio";
 		}
 
-		var control_group = $("<div>").addClass('control-group');
-		var form_label = $("<label>").attr({"for" : data_id, "class" : "control-label"}).text(data_id);
-		var controls;
-		var input;
-
-		if(form_type === "text" || form_type === "radio"){
-			controls = $("<div>").addClass('controls');
-			input = $("<input>").attr({"type" : form_type, "id" : data_id, "name" : data_id});
-		}else if(form_type === "textarea"){
-			input = $("<textarea>");
-		}else{ //no default: bring up the customization form
-
-		}
+		var content;
+		var content_data = {
+			'label_id' : data_id + data_type,
+			'input_id' : data_id
+		};
 		
-		control_group[0].appendChild(form_label[0]);
-		control_group[0].appendChild(controls[0]);
-		controls[0].appendChild(input[0]);
-
-		fragment.appendChild(control_group[0]);
-
-		$('#form_container').append(fragment);
-		$('#forms_label').show();
+		content = Mustache.to_html($('#input_' + form_type).html(), content_data);
+		
+		
+		$('#form_container').append(content);
+		$('#form_container, #forms_label').show();
 
 	}
+});
+
+
+$('#form_container').on('click', '.edit_field', function(){
+	$('#formfield_customizer').modal('show');
 });
 
 $('#btn_generate').on(function(){
 	var new_form = $("<form>").attr({"method" : "post", "action" : form_action, "class" : "horizontal"});
 });
-
 </script>
-
-
