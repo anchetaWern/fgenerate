@@ -40,3 +40,8 @@ li{
 input[type=checkbox]{
     margin-right: 7px;
 }
+
+.radio{
+
+	padding-left:0px;
+}

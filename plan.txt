@@ -70,3 +70,22 @@ Form Guide:
  
 
 
+text
+ -min
+ -max
+ -help
+ -data attachments
+ -placeholder
+ -options
+ -datalist id
+ -datalist data
+
+select
+ -options
+ -help text
+ -data
+
+radio/checkbox
+ -data
+ -options
+ -help text
