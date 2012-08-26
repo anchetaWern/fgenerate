@@ -1,0 +1,43 @@
+*DATA TYPES
+	bigint
+	blob
+	char
+	date
+	datetime
+	decimal
+	double
+	enum
+	float
+	int
+	longblob
+	longtext
+	mediumtext
+	set
+	smallint
+	text
+	time
+	timestamp
+	tinyint
+	tinytext
+	varchar
+
+*COLUMN_KEY
+	MUL
+	PRI - primary
+	UNI
+	
+*COLUMN_DEFAULT
+	DEFINER
+	CONTAINS_SQL
+	CURRENT_TIMESTAMP
+	DROP
+	N -char
+	NO
+	post
+	publish
+	Y -char
+	yes
+	0000-00-00 00:00:00 -timestamp
+	0000-00-00 -date
+	0.000000 -decimal
+	0 -any of the int types

@@ -1,0 +1,20 @@
+#tables{
+	border:1px solid black;
+	width: 221px;
+	float: left;
+}
+
+.fields_container {
+    float: left;
+    margin-right: 10px;
+}
+
+#fields {
+    border: 1px solid black;
+    width: 300px;
+    float: left;
+}
+
+.tbl_header {
+    font-weight: bold;
+}

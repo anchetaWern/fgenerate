@@ -1,0 +1,72 @@
+plan:
+-these are the defaults for the application, but can also be set 
+by the user
+
+submit - automatically generated for each form
+
+textbox
+	*varchar
+	*date, datetime, timestamp
+	*int, small int, medium int, big int
+	*double, decimal, float
+
+textarea
+	*tiny text, text, medium text, long text
+	*blob, medium blob, long blob
+	
+
+password
+ -manually set by the user
+
+radio button
+	*char
+	*tiny int
+
+checkbox
+ -manually set by the user
+
+select
+ -manually set by the user
+ 
+ **Scripts**
+ -Im also planning to include JavaScript as well, so that client-side validation
+ code will also be included automatically based on the following:
+
+*based on the DATA_TYPE we already know what type of data will be accepted by a specific input
+to be generated.
+ - if DATA_TYPE is date a text field with a datepicker is created
+
+*based on the COLUMN_KEY we already know whether to include the fields on the form or not.
+ - if there's no key definitely include
+ - if key is PRI then create a hidden element for it and attach data via JavaScript
+
+*based on the CHARACTER_OCTET_LENGTH:
+ - validation or setting on how many characters can be accepted by an input(of course only text fields are affected by this)
+ - I think range can also be set on html so there's no need for js
+
+
+ //php script
+ -plain php
+ -codeigniter integration
+ -upload controller file and it will automatically generate code
+
+ //scenario for generating form
+ - edit config.php for database information
+ - edit js/config.js for default form elements for specific data types
+ - input the filename to be used when the form is generated
+ - select database
+ - select tables
+ - select fields to include in the form (only one form at a time)
+ - input form name
+ - input the name of the action file, if both the html code and action will be on the same file then leave it blank
+
+Form Guide:
+*only one form can be generated at a time
+*if hidden is checked, field type becomes hidden
+*content is editable
+*clicking on the field allows you to customize the form
+ *you can customize whether the form is hidden or not, fields which are primary key are hidden by default, hidden fields are greyed out in the form preview
+ *form type can be any of the existing form types: email, text, select, radio, checkbox, button, submit, textarea, url, tel num, number, file upload
+ 
+
+
