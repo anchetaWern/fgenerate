@@ -1,20 +1,42 @@
 #tables{
-	border:1px solid black;
-	width: 221px;
-	float: left;
+	background-color: lightgray;
+}
+
+#form_container{
+	background-color: #AB4;
 }
 
 .fields_container {
     float: left;
-    margin-right: 10px;
+    margin: 10px 30px 10px 0px;
+}
+
+#main_container > div{
+	width: 100%;
+	float: left;
+	padding: 20px;
+	border-radius: 5px;
+	margin-bottom: 20px;
 }
 
 #fields {
-    border: 1px solid black;
-    width: 300px;
-    float: left;
+   
+    background-color: #FFA;
 }
 
 .tbl_header {
     font-weight: bold;
+    text-decoration: underline;
+}
+
+.navigation {
+    margin-bottom: 60px;
+}
+
+li{
+	list-style: none;
+}
+
+input[type=checkbox]{
+    margin-right: 7px;
 }

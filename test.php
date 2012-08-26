@@ -1,21 +1,18 @@
-<?php
-require_once('config.php');
-/*
-$db = new Mysqli(HOST, USER, PASSWORD);
 
-if($db->connect_errno){
-	die('Connect Error: ' . $db->connect_errno);
-}
+<div id="container"></div>
+<script src="js/mustache.js"></script>
+<script src="js/jquery18.js"></script>
 
-$tables = $db->query("SELECT DISTINCT SCHEMA_NAME
-    FROM INFORMATION_SCHEMA.SCHEMATA");
-while($row = $tables->fetch_object()){
-	echo $row->SCHEMA_NAME."<br/>";
-} 
-*/
-$html_string = "<html><h1>aa</h1></html>";
-header("Content-Disposition: attachment; filename=abc.html");
-header("Content-Type: text/force-download");
-header("Content-Length: " . filesize($html_string));
-header("Connection: close");
-?>
+<script id="input_text" type="text/html">
+	<input type="text" name="{{name}}" class="{{#classes}}{{.}} {{/classes}}"/>
+</script><!--#input_text-->
+
+<script>
+var classes = {
+'name' : 'wern',
+'classes' : ['a','b','c']
+};
+
+var html = Mustache.to_html($('#input_text').html(), classes);
+$('#container').html(html);
+</script>
