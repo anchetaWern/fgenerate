@@ -1,9 +1,5 @@
-#tables{
-	background-color: #228B22;
-}
-
-#form_container{
-	background-color: #CC6600;
+#database_info{
+    border: 2px solid black;
 }
 
 .fields_container {
@@ -17,12 +13,10 @@
 	padding: 20px;
 	border-radius: 5px;
 	margin-bottom: 20px;
+    border: 2px solid black;
 }
 
-#fields {
-   
-    background-color: #FFA;
-}
+
 
 .tbl_header {
     font-weight: bold;
@@ -45,3 +39,15 @@ input[type=checkbox]{
 
 	padding-left:0px;
 }
+
+#form_customizer {
+    float: right;
+    padding: 10px;
+    border-left: 2px solid black;
+    border-radius: 0px;
+}
+
+#form{
+    float: left;
+}
+

@@ -61,28 +61,32 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     </div><!--/.navigation-->
 
     <div id="main_container" class="container">
-    <form method="post" action="index.php">
-      <p>
-      <label for="db">Database:</label>
-      <?php
-      if($databases->num_rows > 0){ ?>
-      <select name="db" id="db">
-      <?php
-      while($row = $databases->fetch_object()){
-      ?>
-      <option value="<?php echo $row->SCHEMA_NAME; ?>"><?php echo $row->SCHEMA_NAME; ?></option>
-      <?php
-      }
-      ?> 
-      </select>
-      <?php
-      }
-      ?>
-      </p>
-      <p>
-      <button type="button" id="btn_connect" class="btn btn-primary">Connect</button>
-      </p>
-    </form>
+
+    <h4 id="tbl_label">Database</h4>  
+    <div id="database_info">
+      <form method="post" action="index.php">
+        <p>
+        <label for="db">Database:</label>
+        <?php
+        if($databases->num_rows > 0){ ?>
+        <select name="db" id="db">
+        <?php
+        while($row = $databases->fetch_object()){
+        ?>
+        <option value="<?php echo $row->SCHEMA_NAME; ?>"><?php echo $row->SCHEMA_NAME; ?></option>
+        <?php
+        }
+        ?> 
+        </select>
+        <?php
+        }
+        ?>
+        </p>
+        <p>
+        <button type="button" id="btn_connect" class="btn btn-primary">Connect</button>
+        </p>
+      </form>
+    </div>
     
     <h4 id="tbl_label" style="display:none;">Tables</h4>
     <div id="tables" style="display:none;"></div>
@@ -92,7 +96,101 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
     <h4 id="forms_label" style="display:none;">Form</h4>
     <div id="form_container" style="display:none;">
-      
+      <form id="form" class="form-horizontal">
+      </form>
+      <div id="form_customizer" style="display:none;">
+      <h5>Customize Form Field</h5>
+      <form class="form-horizontal">
+
+        <div class="control-group all_type">
+          <label for="data_type" class="control-label">Type</label>
+          <div class="controls">
+            <select name="data_type" id="data_type">
+              <option value="text">text</option>
+              <option value="hidden">hidden</option>
+              <option value="select">select</option>
+              <option value="radio">radio</option>
+              <option value="checkbox">checkbox</option>
+              <option value="textarea">textarea</option>
+              <option value="button">button</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="text number email textarea control-group">
+            <label for="min_length" class="control-label">Min Length</label>
+            <div class="controls">
+             <input type="number" name="min_length" id="min_length" class="input-mini"/>
+            </div>
+        </div>
+
+        <div class="text number email textarea control-group">
+            <label for="max_length" class="control-label">Max Length</label>
+            <div class="controls">
+             <input type="number" name="max_length" id="max_length" class="input-mini"/>
+            </div>
+        </div>
+
+        <div class="text radio checkbox select textarea control-group">
+            <label for="help_text" class="control-label">Help Text</label>
+            <div class="controls">
+              <input type="text" name="help_text" id="help_text" class="input-xlarge"/>
+            </div>
+          </div>
+
+          <div class="text email number radio checkbox select textarea control-group">
+            <label for="field_data" class="control-label">Field Data</label>
+            <div class="controls">
+              <textarea id="field_data" name="field_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
+              <button type="button" id="btn_fielddata" class="btn">Data</button>
+            </div>
+        </div>
+
+        <div class="text email control-group">    
+            <label for="placeholder_text" class="control-label">Placeholder</label>
+            <div class="controls">
+             <input type="text" name="placeholder_text" id="placeholder_text" class="input-xlarge"/>
+            </div>
+         </div>
+
+        <div class="text email number radio checkbox select textarea control-group">    
+            <label for="options_text" class="control-label">Input Options</label>
+            <div class="controls">
+              <input type="text" name="options_text" id="options_text" class="input-xlarge"/>
+            </div>
+        </div>
+
+        <div class="select control-group">    
+            <label for="select_options_text" class="control-label">Select Options</label>
+            <div class="controls">
+              <textarea id="select_options_data" name="select_options_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
+              <button type="button" id="btn_optionsddata" class="btn">Data</button>
+            </div>
+        </div>
+
+        <div class="text email control-group">
+            <label for="datalist_id" class="control-label">Datalist ID</label>
+            <div class="controls">
+              <input type="text" name="datalist_id" id="datalist_id"/>
+            </div>
+          </div>
+
+          <div class="text email control-group">
+            <label for="datalist_data" class="control-label">Datalist Data</label>
+            <div class="controls">
+              <textarea id="datalist_data" name="datalist_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
+              <button type="button" id="btn_datalistdata" class="btn">Data</button>
+            </div>
+        </div>
+            
+        <div class="text email number radio checkbox select textarea control-group">    
+            <label for="classes" class="control-label">Classes</label>
+            <div class="controls">
+              <input type="text" name="classes" id="classes" class="input-large"/>
+            </div>
+        </div>    
+      </form>
+    </div><!--/#form_customizer-->
     </div>
     <button type="button" id="btn_generate" class="btn" style="display:none;">Generate</buton>
 
@@ -105,74 +203,13 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   </div><!--/.container-->
 
-  <div id="formfield_customizer" class="modal hide fade in" style="display: none; ">
+  <div id="data_fetcher" class="modal hide fade in" style="display: none; ">
       <div class="modal-header">
         <a class="close" data-dismiss="modal">x</a>
-        <h3>Customize Form Field</h3>
+        <h3>Fetch Data</h3>
       </div>
       <div class="modal-body">
-	      <label for="data_type">Type</label>
-	      <select name="data_type" id="data_type">
-	        <option value="text">text</option>
-	        <option value="select">select</option>
-	        <option value="radio">radio</option>
-	        <option value="checkbox">checkbox</option>
-	        <option value="textarea">textarea</option>
-	        <option value="button">button</option>
-	      </select>
 
-	      <div class="text number email textarea">
-		      <label for="min_length">Min Length</label>
-		      <input type="text" name="min_length" id="min_length" class="input-mini"/>
-	 	  </div>
-
-	 	  <div class="text number email textarea">
-		      <label for="max_length">Max Length</label>
-		      <input type="text" name="max_length" id="max_length" class="input-mini"/>
-		  </div>
-
-		  <div class="text radio checkbox select textarea">
-		      <label for="help_text">Help Text</label>
-		      <input type="text" name="help_text" id="help_text" class="input-xlarge"/>
-	      </div>
-
-	      <div class="text email number radio checkbox select textarea">
-		      <label for="field_data">Field Data</label>
-		      <textarea id="field_data" name="field_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
-		      <button type="button" id="btn_fielddata" class="btn">Data</button>
-		  </div>
-
-		  <div class="text email">    
-		      <label for="placeholder_text">Placeholder</label>
-		      <input type="text" name="placeholder_text" id="placeholder_text" class="input-xlarge"/>
-		   </div>
-
-		  <div class="text email number radio checkbox select textarea">    
-		      <label for="options_text">Options</label>
-		      <input type="text" name="options_text" id="options_text" class="input-xlarge"/>
-		  </div>
-
-		  <div class="select">    
-		      <label for="select_options_text">Options</label>
-		      <textarea id="select_options_data" name="select_options_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
-		      <button type="button" id="btn_optionsddata" class="btn">Data</button>
-		  </div>
-
-		  <div class="text email">
-		      <label for="datalist_id">Datalist ID</label>
-		      <input type="text" name="datalist_id" id="datalist_id"/>
-	      </div>
-
-	      <div class="text email">
-		      <label for="datalist_data">Datalist Data</label>
-		      <textarea id="datalist_data" name="datalist_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
-		      <button type="button" id="btn_datalistdata" class="btn">Data</button>
-		  </div>
-		      
-		  <div class="text email number radio checkbox select textarea">    
-		      <label for="classes">Classes</label>
-		      <input type="text" name="classes" id="classes" class="input-large"/>
-		  </div>    
       </div><!--/.modal_body-->
 
       <div class="modal-footer">
@@ -180,6 +217,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         <a href="#" class="btn" data-dismiss="modal">Close</a>
       </div>
   </div>
+
+
 </body>
 
 
@@ -201,58 +240,86 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
 
   <script id="input_checkbox" type="text/html">
-    <label class="checkbox {{#classes}}{{.}} {{/classes}}" contenteditable="true">
-      <input type="checkbox" name="{{name}}" class="edit_field" value="{{value}}" {{#options}}{{.}} {{/options}}>
-        {{input_id}}
-    </label>
+    <div class="control-group">
+     <div class="controls">
+      <label class="checkbox control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">
+        <input type="checkbox" id="{{input_id}}" name="{{name}}" class="edit_field" value="{{value}}" {{#options}}{{.}} {{/options}}>
+          {{input_id}}
+      </label>
+      </div>
+    </div>
   </script><!--/#input_checkbox-->
 
 
   <script id="input_radio" type="text/html">
-    <label class="radio {{#classes}}{{.}} {{/classes}}" contenteditable="true">
-      <input type="radio" name="{{name}}" class="edit_field" value="{{value}}" {{#options}}{{.}} {{/options}}>
-        {{input_id}}
-    </label>
+    <div class="control-group">
+      <div class="controls">
+      <label class="radio control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">
+        <input type="radio" id="{{input_id}}" name="{{name}}" class="edit_field" value="{{value}}" {{#options}}{{.}} {{/options}}>
+          {{input_id}}
+      </label>
+      </div>
+    </div>
   </script><!--/#input_radio-->
 
 
   <script id="input_textarea" type="text/html">
-    <label class="{{#classes}}{{.}} {{/classes}}" class="edit_field" contenteditable="true">{{input_id}}</label>
-    <textarea rows="{{rows}}"></textarea>
+    <div class="control-group">
+      <label class="control-label edit_field {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+        <textarea id="{{input_id}}" rows="{{rows}}"></textarea>
+      </div>
+    </div>
   </script><!--/#input_textarea-->
 
 
   <script id="input_select" type="text/html">
-    <label class="{{#classes}}{{.}} {{/classes}}" class="edit_field" contenteditable="true">{{input_id}}</label>
-    <select>
-    {{#option}}
-      <option value="{{option_text}}">{{option_text}}</option>
-    {{/option}}
-    </select>
+   <div class="control-group">
+    <label class="control-label edit_field {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+      <select id="{{input_id}}">
+      {{#option}}
+        <option value="{{option_text}}">{{option_text}}</option>
+      {{/option}}
+      </select>
+      </div>
+    </div>
   </script><!--/#input_select-->
 
 
   <script id="input_prepend" type="text/html">
-    <label class="{{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
-    <div class="input-prepend">
-        <span class="add-on">{{prepend_text}}</span><input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{input_id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}">
+    <div class="control-group">
+      <label class="control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+      <div class="input-prepend">
+          <span class="add-on">{{prepend_text}}</span><input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{input_id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}">
+        </div>
       </div>
+    </div> 
   </script><!--/#input_prepend-->
 
 
   <script id="input_append" type="text/html">
-    <label class="{{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
-    <div class="input-append">
-        <input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{input_id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on">{{append_text}}</span>
+    <div class="control-group">
+      <label class="control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+        <div class="input-append">
+            <input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{input_id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on">{{append_text}}</span>
+        </div>
+      </div>
     </div>
   </script><!--/#input_append-->
 
 
   <script id="input_combined" type="text/html">
-    <label class="{{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
-    <div class="input-prepend input-append">
-      <span class="add-on {{#append_classes}}{{.}} {{/append_classes}}">{{prepend_text}}</span><input class="span2" id="{{id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on {{#append_classes}}{{.}} {{/append_classes}}">{{append_text}}</span>
+  <div class="control-group">
+    <label class="control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+    <div class="controls">
+      <div class="input-prepend input-append">
+        <span class="add-on {{#append_classes}}{{.}} {{/append_classes}}">{{prepend_text}}</span><input class="span2" id="{{id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on {{#append_classes}}{{.}} {{/append_classes}}">{{append_text}}</span>
+      </div>
     </div>
+  </div> 
   </script><!--/#input_combined-->
 
 
@@ -261,7 +328,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     var database = $.trim($('#db').val());
     var tbl_container = $('#tables');
     tbl_container.empty();
-    $('#fields, #form_container').empty();
+    $('#fields, #form').empty();
     
     var fragment = document.createDocumentFragment();
     
@@ -350,17 +417,21 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   });
 
 
+
   $('#fields').on('click', '.fields', function(){
     if($(this).attr('checked')){  
-      var form_container = $('#form_container');
+      var form_container = $('#form');
       var fragment = document.createDocumentFragment();
 
-      var data_id = $(this).data('id');
-      var data_default = $(this).data('default');
-      var data_key     = $(this).data('key');
-      var data_length  = $(this).data('length');
-      var data_type    = $(this).data('type');
-      var data_table   = $(this).data('table');
+      var input = $(this);
+      var data_id = input.data('id');
+      var data_default = input.data('default');
+      var data_key     = input.data('key');
+      var data_length  = input.data('length');
+      var data_type    = $.trim(input.data('type'));
+      var data_table   = input.data('table');
+
+    
 
       var form_type;
       if(textbox.indexOf(data_type) > -1){
@@ -371,6 +442,17 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         form_type = "radio";
       }
 
+
+      var input_data = {
+        'data_id' : data_id,
+        'data_default' : data_default,
+        'data_key' : data_key,
+        'data_length' : data_length,
+        'data_type' : data_type,
+        'data_table' : data_table,
+        'form_type' : form_type
+      };
+
       var content;
       var content_data = {
         'label_id' : data_id + data_type,
@@ -379,26 +461,83 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       
       content = Mustache.to_html($('#input_' + form_type).html(), content_data);
       
-      
-      $('#form_container').append(content);
+      form_container.append(content);
+      $('#' + data_id).data(input_data);
       $('#form_container, #forms_label').show();
-
     }
   });
 
 
   $('#form_container').on('click', '.edit_field', function(){
-    $('#formfield_customizer').modal('show');
+    var form_customizer = $('#form_customizer');
+    form_customizer.css('display','');
+
+    var input = $(this);
+    var data_id = input.attr('id');
+    var data_default = input.data('default');
+    var data_key     = input.data('key');
+    var data_length  = input.data('length');
+    var data_type    = input.data('type');
+    var data_table   = input.data('table');
+    var form_type    = input.data('form_type');
+
+    
+    $('#data_type').val(form_type);
+    $('#max_length').val(data_length);
+    window.current_field = data_id;
+   
   });
 
-  $('#formfield_customizer').on('click', '#btn_updatefield', function(){
 
+  $('#form_customizer').on('blur', 'input, textarea, select', function(){
+    var id = $(this).attr('id');
+
+    switch(id){
+      case 'classes':
+    
+        var classes = $('#'+id).val();  
+        console.log(classes);
+        $('#'+current_field).addClass(classes);
+      break;
+
+      case 'datalist_data':
+      break;
+
+      case 'datalist_id':
+      break;
+
+      case 'select_options_data':
+      break;
+
+      case 'options_text':
+      break;
+
+      case 'placeholder_text':
+      break;
+
+      case 'field_data':
+      break;
+
+      case 'help_text':
+      break;
+
+      case 'max_length':
+      break;
+
+      case 'min_length':
+      break;
+
+      case 'data_type':
+      break;
+    }
   });
+  
 
-  $('#formfield_customizer').on('change', '#data_type', function(){
+  $('#form_customizer').on('change', '#data_type', function(){
     var field_type = $(this).val();
 
-    $(".modal-body div").hide();
+    $('#form_customizer .control-group').hide();
+    $('.all_type').show();
     $('.'+field_type).show();
 
   });
