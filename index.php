@@ -482,18 +482,21 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       content = Mustache.to_html($('#input_' + form_type).html(), content_data);
       
       form_container.append(content);
-      $('#' + data_id).data(input_data);
+
+      var current_element = $('#' + data_id);
+      current_element.data(input_data);
       $('#form_container, #forms_label').show();
 
       //push new elements into the temporary location
       var number_of_fields = form_container.children().length - 1;
       form_fields.fields[number_of_fields] = {};
       form_fields.fields[number_of_fields]['data'] = input_data;
-      form_fields.fields[number_of_fields]['field_type'] = form_type;
-      form_fields.fields[number_of_fields]['id'] = data_id;
-
-      
-
+     
+      $(current_element[0].attributes).each(function(){
+        var attr = this.nodeName; 
+        var attr_value = this.nodeValue;
+        form_fields.fields[number_of_fields][attr] = attr_value;
+      });
     }
   });
 
@@ -522,6 +525,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     var form_type    = input.data('form_type');
     var field_index  = input.data('data_index'); 
 
+   
     
     $('#data_type').val(form_type);
     $('#max_length').val(data_length);
@@ -529,7 +533,11 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     //will be used later on as index for the field storage
     input_config.current_field_index = field_index;
 
+    var classes = form_fields.fields[field_index].class;
+
+    //supply data to form fields
     $('#data_type').val(form_type);
+    $('#classes').val(classes);
 
    
   });
@@ -537,13 +545,13 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   $('#form_customizer').on('blur', 'input, textarea, select', function(){
     var id = $(this).attr('id');
+    var current_field_index = input_config.current_field_index;
+    var field_id = form_fields.fields[current_field_index].id;
 
     switch(id){
       case 'classes':
-    
-        var classes = $('#'+id).val();  
-        console.log(classes);
-        $('#'+current_field).addClass(classes);
+        
+        update_input_class(current_field_index, field_id);
       break;
 
       case 'datalist_data':
@@ -577,6 +585,12 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       break;
     }
   });
+
+  function update_input_class(current_field_index, field_id){
+      var classes = $.trim($('#classes').val());
+      $('#' + field_id).attr('class', classes);
+      form_fields.fields[current_field_index].class = classes;
+  }
   
 
   $('#form_customizer').on('change', '#data_type', function(){
@@ -606,11 +620,14 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       content = Mustache.to_html($('#input_' + field_type).html(), content_data);
       $('#'+input_id).parents('.control-group').replaceWith(content);
 
-      form_fields.fields[input_index].field_type = field_type;
+      form_fields.fields[input_index].type = field_type;
       form_fields.fields[input_index].data.form_type = field_type;
 
       $('#'+input_id).data(data).addClass('edit_field');
+      
+      update_input_class(input_index, input_id);
   });
+
 
   $('#btn_generate').on(function(){
     var new_form = $("<form>").attr({"method" : "post", "action" : form_action, "class" : "horizontal"});
