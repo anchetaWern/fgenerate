@@ -528,6 +528,9 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
     //will be used later on as index for the field storage
     input_config.current_field_index = field_index;
+
+    $('#data_type').val(form_type);
+
    
   });
 
@@ -585,13 +588,28 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('.'+field_type).show();
 
     //change the current field into selected field
-    var input_id = input_config.current_field;
+    var input_index = input_config.current_field_index;
 
-    content = Mustache.to_html($('#input_' + field_type).html(), content_data);
+    var input_data = form_fields.fields[input_index];
+    var input_id = input_data.id;
+    var data = input_data.data;
+    var data_type = data.data_type;
+    var form_type = data.form_type;
 
-    //$('#'+input_id).replaceWith();
+    var content_data = {
+        'label_id' : input_id + data_type,
+        'input_id' : input_id
+    };
 
 
+      
+      content = Mustache.to_html($('#input_' + field_type).html(), content_data);
+      $('#'+input_id).parents('.control-group').replaceWith(content);
+
+      form_fields.fields[input_index].field_type = field_type;
+      form_fields.fields[input_index].data.form_type = field_type;
+
+      $('#'+input_id).data(data).addClass('edit_field');
   });
 
   $('#btn_generate').on(function(){
