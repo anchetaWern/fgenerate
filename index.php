@@ -324,6 +324,14 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
 
   <script>
+  var input_config = {
+    current_field_index : ''
+  };
+
+  var form_fields = {
+    fields : []
+  };
+
   $('#btn_connect').click(function(){
     var database = $.trim($('#db').val());
     var tbl_container = $('#tables');
@@ -368,50 +376,53 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       var database = $.trim($('#db').val());
       var tbl      = $(this).attr('name');
 
-      var field_container = $('#fields');
-      var new_container   = $("<div>").addClass("fields_container");
-      var table_header    = $("<span>").addClass("tbl_header").text(tbl);
+      if($('#'+tbl).length == 0){
 
-      new_container[0].appendChild(table_header[0]);
+        var field_container = $('#fields');
+        var new_container   = $("<div>").addClass("fields_container");
+        var table_header    = $("<span>").attr({"class" : "tbl_header", "id" : tbl}).text(tbl);
 
-      var fragment = document.createDocumentFragment();
+        new_container[0].appendChild(table_header[0]);
 
-      $.post('invoker.php',
-        {'action' : 2, 'db' : database, 'table' : tbl},
-        function(data){
-          var fields = JSON.parse(data);
-          for(var f in fields){
-            var field        = fields[f];
-            var field_name   = field['field_name'];
-            var data_type    = field['data_type'];
-            var default_data = field['default_data'];
-            var column_key   = field['column_key'];
-            var nullable     = field['nullable'];
-            var length       = field['length'];
+        var fragment = document.createDocumentFragment();
 
-            var new_li = $("<li>");
-            var new_box = $("<input>").attr({"type" : "checkbox", "name" : field_name, "class" : "fields"})
-              .data({
-                "table" : tbl, "type" : data_type, "default" : default_data, "key" : column_key, 
-                "nullable" : nullable, "length" : length, "id" : field_name
-              });
+        $.post('invoker.php',
+          {'action' : 2, 'db' : database, 'table' : tbl},
+          function(data){
+            var fields = JSON.parse(data);
+            for(var f in fields){
+              var field        = fields[f];
+              var field_name   = field['field_name'];
+              var data_type    = field['data_type'];
+              var default_data = field['default_data'];
+              var column_key   = field['column_key'];
+              var nullable     = field['nullable'];
+              var length       = field['length'];
 
-            var new_lbl = $("<label>");
-            var new_lbl_txt = $("<span>").text(field_name);
-            
-            new_li.append(new_box);
-            new_box.wrap(new_lbl);
-            new_lbl_txt.insertAfter(new_box);
+              var new_li = $("<li>");
+              var new_box = $("<input>").attr({"type" : "checkbox", "name" : field_name, "class" : "fields"})
+                .data({
+                  "table" : tbl, "type" : data_type, "default" : default_data, "key" : column_key, 
+                  "nullable" : nullable, "length" : length, "id" : field_name
+                });
 
-            fragment.appendChild(new_li[0]);
+              var new_lbl = $("<label>");
+              var new_lbl_txt = $("<span>").text(field_name);
+              
+              new_li.append(new_box);
+              new_box.wrap(new_lbl);
+              new_lbl_txt.insertAfter(new_box);
 
+              fragment.appendChild(new_li[0]);
+
+            }
+
+            new_container[0].appendChild(fragment);
+            field_container[0].appendChild(new_container[0]);
+            $('#fields, #fields_label').show();
           }
-
-          new_container[0].appendChild(fragment);
-          field_container[0].appendChild(new_container[0]);
-          $('#fields, #fields_label').show();
-        }
-      );
+        );
+      }
     }
     
   });
@@ -421,15 +432,23 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   $('#fields').on('click', '.fields', function(){
     if($(this).attr('checked')){  
       var form_container = $('#form');
+
       var fragment = document.createDocumentFragment();
+
 
       var input = $(this);
       var data_id = input.data('id');
+
+      if(check_elementID(data_id)){
+        data_id = get_elementID(data_id);
+      }
+
       var data_default = input.data('default');
       var data_key     = input.data('key');
       var data_length  = input.data('length');
       var data_type    = $.trim(input.data('type'));
       var data_table   = input.data('table');
+      var data_index   = form_container.children().length; 
 
     
 
@@ -450,7 +469,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         'data_length' : data_length,
         'data_type' : data_type,
         'data_table' : data_table,
-        'form_type' : form_type
+        'form_type' : form_type,
+        'data_index' : data_index
       };
 
       var content;
@@ -464,8 +484,28 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       form_container.append(content);
       $('#' + data_id).data(input_data);
       $('#form_container, #forms_label').show();
+
+      //push new elements into the temporary location
+      var number_of_fields = form_container.children().length - 1;
+      form_fields.fields[number_of_fields] = {};
+      form_fields.fields[number_of_fields]['data'] = input_data;
+      form_fields.fields[number_of_fields]['field_type'] = form_type;
+      form_fields.fields[number_of_fields]['id'] = data_id;
+
+      
+
     }
   });
+
+  function check_elementID(id){//checks if element with the same id already exists in the current form
+    var len = $('#'+id).length;
+    return !!len; //returns true if there is atleast 1 element with the id specified
+  }
+
+  function get_elementID(id){//returns a new element ID
+    var len = $('#'+id).length;
+    return id + "_" + len;
+  }
 
 
   $('#form_container').on('click', '.edit_field', function(){
@@ -480,11 +520,14 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     var data_type    = input.data('type');
     var data_table   = input.data('table');
     var form_type    = input.data('form_type');
+    var field_index  = input.data('data_index'); 
 
     
     $('#data_type').val(form_type);
     $('#max_length').val(data_length);
-    window.current_field = data_id;
+
+    //will be used later on as index for the field storage
+    input_config.current_field_index = field_index;
    
   });
 
@@ -536,9 +579,18 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   $('#form_customizer').on('change', '#data_type', function(){
     var field_type = $(this).val();
 
+    //change fields in the form customizer
     $('#form_customizer .control-group').hide();
     $('.all_type').show();
     $('.'+field_type).show();
+
+    //change the current field into selected field
+    var input_id = input_config.current_field;
+
+    content = Mustache.to_html($('#input_' + field_type).html(), content_data);
+
+    //$('#'+input_id).replaceWith();
+
 
   });
 
