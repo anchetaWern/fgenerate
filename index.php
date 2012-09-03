@@ -97,6 +97,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     <h4 id="forms_label" style="display:none;">Form</h4>
     <div id="form_container" style="display:none;">
       <form id="form" class="form-horizontal">
+
       </form>
       <div id="form_customizer" style="display:none;">
       <h5>Customize Form Field</h5>
@@ -322,6 +323,10 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   </div> 
   </script><!--/#input_combined-->
 
+  <script id="input_helptext" type="text/html">
+   <span class="help-inline">{{help_text}}</span>
+  </script><!--/#input_helptext-->
+
 
   <script>
   var input_config = {
@@ -534,11 +539,14 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     input_config.current_field_index = field_index;
 
     var classes = form_fields.fields[field_index].class;
+    var placeholder = form_fields.fields[field_index].placeholder;
+    var help_text = form_fields.fields[field_index].help_text;
 
     //supply data to form fields
     $('#data_type').val(form_type);
     $('#classes').val(classes);
-
+    $('#placeholder_text').val(placeholder);
+    $('#help_text').val(help_text);
    
   });
 
@@ -564,15 +572,18 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       break;
 
       case 'options_text':
+
       break;
 
       case 'placeholder_text':
+        update_input_placeholder(current_field_index, field_id);
       break;
 
       case 'field_data':
       break;
 
       case 'help_text':
+        update_input_helptext(current_field_index, field_id);
       break;
 
       case 'max_length':
@@ -591,7 +602,32 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       $('#' + field_id).attr('class', classes);
       form_fields.fields[current_field_index].class = classes;
   }
+
+  function update_input_placeholder(current_field_index, field_id){
+    var placeholder = $.trim($('#placeholder_text').val());
+    $('#' + field_id).attr('placeholder', placeholder);
+    form_fields.fields[current_field_index].placeholder = placeholder;
+  }
   
+  function update_input_helptext(current_field_index, field_id){
+    var help_text = $.trim($('#help_text').val()); 
+
+    var input_helptext = $('#' + field_id).siblings('.help-inline');
+    var number_of_helptext = input_helptext.length;
+    if(number_of_helptext == 0){
+      var content_data = {
+        'help_text' : help_text
+      };
+        
+      var content = Mustache.to_html($('#input_helptext').html(), content_data);
+      $(content).insertAfter('#' + field_id);
+
+    }else{
+      input_helptext.text(help_text);
+    }
+
+    form_fields.fields[current_field_index].help_text = help_text;
+  }
 
   $('#form_customizer').on('change', '#data_type', function(){
     var field_type = $(this).val();
@@ -623,11 +659,10 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       form_fields.fields[input_index].type = field_type;
       form_fields.fields[input_index].data.form_type = field_type;
 
-      $('#'+input_id).data(data).addClass('edit_field');
+      $('#' + input_id).data(data).addClass('edit_field');
       
       update_input_class(input_index, input_id);
   });
-
 
   $('#btn_generate').on(function(){
     var new_form = $("<form>").attr({"method" : "post", "action" : form_action, "class" : "horizontal"});
