@@ -113,6 +113,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
               <option value="radio">radio</option>
               <option value="checkbox">checkbox</option>
               <option value="textarea">textarea</option>
+              <option value="number">number</option>
               <option value="button">button</option>
             </select>
           </div>
@@ -132,14 +133,63 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             </div>
         </div>
 
+        <div class="number control-group">
+            <label for="input_step" class="control-label">Step</label>
+            <div class="controls">
+             <input type="number" name="input_step" id="input_step" class="input-mini"/>
+            </div>
+        </div>
+
+        <div class="text email control-group">
+            <label for="input_size" class="control-label">Size</label>
+            <div class="controls">
+            <input type="number" name="input_size" id="input_size" class="input-mini"/>
+            </div>
+        </div>
+
+        <div class="select control-group">
+            <label for="input_multiple" class="control-label">Multiple</label>
+            <div class="controls">
+              <input type="checkbox" name="input_multiple" id="input_multiple"/>
+            </div>
+        </div>
+
         <div class="text radio checkbox select textarea control-group">
             <label for="help_text" class="control-label">Help Text</label>
             <div class="controls">
               <input type="text" name="help_text" id="help_text" class="input-xlarge"/>
             </div>
-          </div>
+        </div>
 
-          <div class="text email number radio checkbox select textarea control-group">
+        <div class="text email control-group">
+            <label for="pattern_text" class="control-label">Pattern</label>
+            <div class="controls">
+              <input type="text" name="pattern_text" id="pattern_text" class="input-xlarge"/>
+            </div>
+        </div>
+
+        <div class="text select textarea control-group">
+            <label for="input_required" class="control-label">Required</label>
+            <div class="controls">
+              <input type="checkbox" name="input_required" id="input_required"/>
+            </div>
+        </div>
+
+        <div class="text select textarea control-group">
+            <label for="input_disabled" class="control-label">Disabled</label>
+            <div class="controls">
+              <input type="checkbox" name="input_disabled" id="input_disabled"/>
+            </div>
+        </div>
+
+        <div class="text select textarea control-group">
+            <label for="input_readonly" class="control-label">Read-only</label>
+            <div class="controls">
+              <input type="checkbox" name="input_readonly" id="input_readonly"/>
+            </div>
+        </div>
+
+        <div class="text email number radio checkbox select textarea control-group">
             <label for="field_data" class="control-label">Field Data</label>
             <div class="controls">
               <textarea id="field_data" name="field_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
@@ -151,13 +201,6 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             <label for="placeholder_text" class="control-label">Placeholder</label>
             <div class="controls">
              <input type="text" name="placeholder_text" id="placeholder_text" class="input-xlarge"/>
-            </div>
-         </div>
-
-        <div class="text email number radio checkbox select textarea control-group">    
-            <label for="options_text" class="control-label">Input Options</label>
-            <div class="controls">
-              <input type="text" name="options_text" id="options_text" class="input-xlarge"/>
             </div>
         </div>
 
@@ -179,7 +222,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
           <div class="text email control-group">
             <label for="datalist_data" class="control-label">Datalist Data</label>
             <div class="controls">
-              <textarea id="datalist_data" name="datalist_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
+              <textarea id="datalist_data" name="datalist_data" style="margin-left: 0px; margin-right: 0px; width: 363px;"></textarea>
               <button type="button" id="btn_datalistdata" class="btn">Data</button>
             </div>
         </div>
@@ -518,7 +561,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   $('#form_container').on('click', '.edit_field', function(){
     var form_customizer = $('#form_customizer');
-    form_customizer.css('display','');
+    form_customizer.show();
+
 
     var input = $(this);
     var data_id = input.attr('id');
@@ -530,7 +574,9 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     var form_type    = input.data('form_type');
     var field_index  = input.data('data_index'); 
 
-   
+    $('#form_customizer .control-group').hide();
+    $('.all_type').show();
+    $('.' + form_type).show();
     
     $('#data_type').val(form_type);
     $('#max_length').val(data_length);
@@ -541,15 +587,40 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     var classes = form_fields.fields[field_index].class;
     var placeholder = form_fields.fields[field_index].placeholder;
     var help_text = form_fields.fields[field_index].help_text;
+    var required = form_fields.fields[field_index].required;
+    var disabled = form_fields.fields[field_index].disabled;
 
     //supply data to form fields
     $('#data_type').val(form_type);
     $('#classes').val(classes);
     $('#placeholder_text').val(placeholder);
     $('#help_text').val(help_text);
+    $('#input_required').attr('checked' , required);
+    $('#input_disabled').attr('checked' , disabled);
    
   });
+  
+  $('#form_customizer').on('click', 'input', function(){
+    var id = $(this).attr('id');
+    var current_field_index = input_config.current_field_index;
+    var field_id = form_fields.fields[current_field_index].id;
 
+    switch(id){
+       //prerequisite: disabled, readonly is unchecked
+      case 'input_required':
+        update_required(current_field_index, field_id);
+      break;
+
+      //prerequisite: required is unchecked
+      case 'input_readonly':
+      break;
+
+      //prerequisite: required is unchecked
+      case 'input_disabled':
+        update_disabled(current_field_index, field_id);
+      break;
+    }
+  });
 
   $('#form_customizer').on('blur', 'input, textarea, select', function(){
     var id = $(this).attr('id');
@@ -571,10 +642,6 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       case 'select_options_data':
       break;
 
-      case 'options_text':
-
-      break;
-
       case 'placeholder_text':
         update_input_placeholder(current_field_index, field_id);
       break;
@@ -593,6 +660,21 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       break;
 
       case 'data_type':
+      break;
+
+      //only for text, email
+      case 'pattern_text':
+      break;
+
+      //only for number
+      case 'input_step':
+      break;
+
+      case 'input_size':
+      break;
+
+      //only for select
+      case 'input_multiple':
       break;
     }
   });
@@ -628,6 +710,19 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
     form_fields.fields[current_field_index].help_text = help_text;
   }
+
+  function update_required(current_field_index, field_id){
+    var required = !!$('#input_required').attr('checked');
+    $('#' + field_id).attr('required', required);
+    form_fields.fields[current_field_index].required = required;
+  }
+
+  function update_disabled(current_field_index, field_id){
+    var disabled = !!$('#input_disabled').attr('checked');
+    $('#' + field_id).attr('disabled', disabled);
+    form_fields.fields[current_field_index].disabled = disabled;
+  }
+
 
   $('#form_customizer').on('change', '#data_type', function(){
     var field_type = $(this).val();
