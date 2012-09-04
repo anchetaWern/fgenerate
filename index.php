@@ -108,12 +108,19 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
           <div class="controls">
             <select name="data_type" id="data_type">
               <option value="text">text</option>
+              <option value="email">email</option>
+              <option value="url">url</option>
               <option value="hidden">hidden</option>
               <option value="select">select</option>
               <option value="radio">radio</option>
               <option value="checkbox">checkbox</option>
               <option value="textarea">textarea</option>
               <option value="number">number</option>
+              <option value="date">date</option>
+              <option value="datetime">datetime</option>
+              <option value="week">week</option>
+              <option value="time">time</option>
+              <option value="range">range</option>
               <option value="button">button</option>
             </select>
           </div>
@@ -137,13 +144,6 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             <label for="input_step" class="control-label">Step</label>
             <div class="controls">
              <input type="number" name="input_step" id="input_step" class="input-mini"/>
-            </div>
-        </div>
-
-        <div class="text email control-group">
-            <label for="input_size" class="control-label">Size</label>
-            <div class="controls">
-            <input type="number" name="input_size" id="input_size" class="input-mini"/>
             </div>
         </div>
 
@@ -172,13 +172,6 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             <label for="input_required" class="control-label">Required</label>
             <div class="controls">
               <input type="checkbox" name="input_required" id="input_required"/>
-            </div>
-        </div>
-
-        <div class="text select textarea control-group">
-            <label for="input_disabled" class="control-label">Disabled</label>
-            <div class="controls">
-              <input type="checkbox" name="input_disabled" id="input_disabled"/>
             </div>
         </div>
 
@@ -277,7 +270,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     <div class="control-group">
         <label class="control-label" contenteditable="true">{{input_id}}</label>
           <div class="controls">
-            <input type="text" id="{{input_id}}" class="edit_field {{#classes}}{{.}} {{/classes}}" placeholder="{{placeholder}}" {{#options}}{{.}} {{/options}}>
+            <input type="text" id="{{input_id}}" class="edit_field" autocomplete="off">
           </div>
       </div>
   </script><!--/#input_text-->
@@ -286,8 +279,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   <script id="input_checkbox" type="text/html">
     <div class="control-group">
      <div class="controls">
-      <label class="checkbox control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">
-        <input type="checkbox" id="{{input_id}}" name="{{name}}" class="edit_field" value="{{value}}" {{#options}}{{.}} {{/options}}>
+      <label class="checkbox control-label" contenteditable="true">
+        <input type="checkbox" id="{{input_id}}" name="{{name}}" class="edit_field" value="{{value}}">
           {{input_id}}
       </label>
       </div>
@@ -298,8 +291,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   <script id="input_radio" type="text/html">
     <div class="control-group">
       <div class="controls">
-      <label class="radio control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">
-        <input type="radio" id="{{input_id}}" name="{{name}}" class="edit_field" value="{{value}}" {{#options}}{{.}} {{/options}}>
+      <label class="radio control-label" contenteditable="true">
+        <input type="radio" id="{{input_id}}" name="{{name}}" class="edit_field" value="{{value}}">
           {{input_id}}
       </label>
       </div>
@@ -309,7 +302,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   <script id="input_textarea" type="text/html">
     <div class="control-group">
-      <label class="control-label edit_field {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+      <label class="control-label edit_field" contenteditable="true">{{input_id}}</label>
       <div class="controls">
         <textarea id="{{input_id}}" rows="{{rows}}"></textarea>
       </div>
@@ -319,7 +312,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   <script id="input_select" type="text/html">
    <div class="control-group">
-    <label class="control-label edit_field {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+    <label class="control-label edit_field" contenteditable="true">{{input_id}}</label>
       <div class="controls">
       <select id="{{input_id}}">
       {{#option}}
@@ -333,10 +326,10 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   <script id="input_prepend" type="text/html">
     <div class="control-group">
-      <label class="control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
       <div class="controls">
       <div class="input-prepend">
-          <span class="add-on">{{prepend_text}}</span><input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{input_id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}">
+          <span class="add-on">{{prepend_text}}</span><input class="span2" id="{{input_id}}" size="{{size}}" type="{{type}}" autocomplete="off">
         </div>
       </div>
     </div> 
@@ -345,10 +338,10 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   <script id="input_append" type="text/html">
     <div class="control-group">
-      <label class="control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
       <div class="controls">
         <div class="input-append">
-            <input class="span2 {{#classes}}{{.}} {{/classes}}" id="{{input_id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on">{{append_text}}</span>
+            <input class="span2" id="{{input_id}}" type="{{type}}" autocomplete="off"><span class="add-on">{{append_text}}</span>
         </div>
       </div>
     </div>
@@ -357,19 +350,23 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   <script id="input_combined" type="text/html">
   <div class="control-group">
-    <label class="control-label {{#classes}}{{.}} {{/classes}}" contenteditable="true">{{input_id}}</label>
+    <label class="control-label" contenteditable="true">{{input_id}}</label>
     <div class="controls">
       <div class="input-prepend input-append">
-        <span class="add-on {{#append_classes}}{{.}} {{/append_classes}}">{{prepend_text}}</span><input class="span2" id="{{id}}" size="{{size}}" type="{{type}}" placeholder="{{placeholder}}"><span class="add-on {{#append_classes}}{{.}} {{/append_classes}}">{{append_text}}</span>
+        <span class="add-on">{{prepend_text}}</span><input class="span2" id="{{id}}" type="{{type}}" autocomplete="off"><span class="add-on">{{append_text}}</span>
       </div>
     </div>
   </div> 
   </script><!--/#input_combined-->
 
   <script id="input_helptext" type="text/html">
-   <span class="help-inline">{{help_text}}</span>
+   <span class="help-inline" contenteditable>{{help_text}}</span>
   </script><!--/#input_helptext-->
 
+  <script id="input_datalist" type="text/html">
+    <datalist id="{{id}}">
+    </datalist>
+  </script><!--/#input_datalist-->
 
   <script>
   var input_config = {
@@ -539,12 +536,18 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       var number_of_fields = form_container.children().length - 1;
       form_fields.fields[number_of_fields] = {};
       form_fields.fields[number_of_fields]['data'] = input_data;
+
+      form_fields.fields[number_of_fields].required = false;
+      form_fields.fields[number_of_fields].readonly = false;
+
      
       $(current_element[0].attributes).each(function(){
         var attr = this.nodeName; 
         var attr_value = this.nodeValue;
         form_fields.fields[number_of_fields][attr] = attr_value;
       });
+
+
     }
   });
 
@@ -588,7 +591,10 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     var placeholder = form_fields.fields[field_index].placeholder;
     var help_text = form_fields.fields[field_index].help_text;
     var required = form_fields.fields[field_index].required;
-    var disabled = form_fields.fields[field_index].disabled;
+    var readonly = form_fields.fields[field_index].readonly;
+    var pattern = form_fields.fields[field_index].pattern;
+    var datalist_id = form_fields.fields[field_index].datalist_id;
+    var datalist_data = form_fields.fields[field_index].datalist_data;
 
     //supply data to form fields
     $('#data_type').val(form_type);
@@ -596,7 +602,12 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('#placeholder_text').val(placeholder);
     $('#help_text').val(help_text);
     $('#input_required').attr('checked' , required);
-    $('#input_disabled').attr('checked' , disabled);
+    $('#input_readonly').attr('checked', readonly);
+    $('#pattern_text').val(pattern);
+    $('#datalist_id').val(datalist_id);
+    $('#datalist_data').val(datalist_data);
+
+
    
   });
   
@@ -613,12 +624,9 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
       //prerequisite: required is unchecked
       case 'input_readonly':
+        update_readonly(current_field_index, field_id);
       break;
 
-      //prerequisite: required is unchecked
-      case 'input_disabled':
-        update_disabled(current_field_index, field_id);
-      break;
     }
   });
 
@@ -633,11 +641,14 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         update_input_class(current_field_index, field_id);
       break;
 
-      case 'datalist_data':
+      case 'datalist_id':
+        update_input_datalist(current_field_index, field_id);
       break;
 
-      case 'datalist_id':
+      case 'datalist_data':
+        update_datalist_data(current_field_index, field_id);
       break;
+
 
       case 'select_options_data':
       break;
@@ -664,13 +675,11 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
       //only for text, email
       case 'pattern_text':
+        update_input_patterns(current_field_index, field_id);
       break;
 
       //only for number
       case 'input_step':
-      break;
-
-      case 'input_size':
       break;
 
       //only for select
@@ -717,11 +726,48 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     form_fields.fields[current_field_index].required = required;
   }
 
-  function update_disabled(current_field_index, field_id){
-    var disabled = !!$('#input_disabled').attr('checked');
-    $('#' + field_id).attr('disabled', disabled);
-    form_fields.fields[current_field_index].disabled = disabled;
+  function update_readonly(current_field_index, field_id){
+    var readonly = !!$('#input_readonly').attr('checked');
+    $('#' + field_id).attr('readonly', readonly);
+    form_fields.fields[current_field_index].readonly = readonly;
   }
+
+   function update_input_patterns(current_field_index, field_id){
+      var pattern = $.trim($('#pattern_text').val());
+      $('#' + field_id).attr('pattern', pattern);
+      form_fields.fields[current_field_index].pattern = pattern;
+  }
+
+  function update_input_datalist(current_field_index, field_id){
+    var datalist_id = $.trim($('#datalist_id').val());
+
+    var content_data = {
+      'id' : datalist_id
+    };
+    var content = Mustache.to_html($('#input_datalist').html(), content_data);
+    $(content).insertAfter('#' + field_id);
+    $('#' + field_id).attr('list', datalist_id);
+    form_fields.fields[current_field_index].datalist_id = datalist_id;
+  }
+
+  function update_datalist_data(current_field_index, field_id){
+    var datalist_id = form_fields.fields[current_field_index].datalist_id;
+    var datalist_data = $.trim($('#datalist_data').val())
+    var datalist_data_r = datalist_data.split(" ");
+    var fragment = document.createDocumentFragment();
+
+
+    for(var x = 0; len = datalist_data_r.length, x < len; x++){
+      var value = datalist_data_r[x];
+      var option = $("<option>").attr("value", value).text(value);
+      fragment.appendChild(option[0]);
+    }
+
+    $('#' + datalist_id).empty();
+    $('#' + datalist_id).append(fragment);
+    form_fields.fields[current_field_index].datalist_data = datalist_data;
+  }
+
 
 
   $('#form_customizer').on('change', '#data_type', function(){
@@ -746,17 +792,16 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         'input_id' : input_id
     };
 
-
       
-      content = Mustache.to_html($('#input_' + field_type).html(), content_data);
-      $('#'+input_id).parents('.control-group').replaceWith(content);
+    content = Mustache.to_html($('#input_' + field_type).html(), content_data);
+    $('#'+input_id).parents('.control-group').replaceWith(content);
 
-      form_fields.fields[input_index].type = field_type;
-      form_fields.fields[input_index].data.form_type = field_type;
+    form_fields.fields[input_index].type = field_type;
+    form_fields.fields[input_index].data.form_type = field_type;
 
-      $('#' + input_id).data(data).addClass('edit_field');
-      
-      update_input_class(input_index, input_id);
+    $('#' + input_id).data(data).addClass('edit_field');
+    
+    update_input_class(input_index, input_id);
   });
 
   $('#btn_generate').on(function(){
