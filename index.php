@@ -186,7 +186,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             <label for="field_data" class="control-label">Field Data</label>
             <div class="controls">
               <textarea id="field_data" name="field_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
-              <button type="button" id="btn_fielddata" class="btn">Data</button>
+               <a data-toggle="modal" href="#data_fetcher" class="btn">Data</a>
             </div>
         </div>
 
@@ -201,7 +201,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             <label for="select_options_text" class="control-label">Select Options</label>
             <div class="controls">
               <textarea id="select_options_data" name="select_options_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
-              <button type="button" id="btn_optionsddata" class="btn">Data</button>
+               <a data-toggle="modal" href="#data_fetcher" class="btn">Data</a>
             </div>
         </div>
 
@@ -216,7 +216,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             <label for="datalist_data" class="control-label">Datalist Data</label>
             <div class="controls">
               <textarea id="datalist_data" name="datalist_data" style="margin-left: 0px; margin-right: 0px; width: 363px;"></textarea>
-              <button type="button" id="btn_datalistdata" class="btn">Data</button>
+              <a data-toggle="modal" href="#data_fetcher" class="btn">Data</a>
             </div>
         </div>
             
@@ -246,7 +246,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         <h3>Fetch Data</h3>
       </div>
       <div class="modal-body">
-
+          
       </div><!--/.modal_body-->
 
       <div class="modal-footer">
@@ -595,6 +595,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     var pattern = form_fields.fields[field_index].pattern;
     var datalist_id = form_fields.fields[field_index].datalist_id;
     var datalist_data = form_fields.fields[field_index].datalist_data;
+    var field_data = form_fields.fields[field_index].field_data;
 
     //supply data to form fields
     $('#data_type').val(form_type);
@@ -606,6 +607,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('#pattern_text').val(pattern);
     $('#datalist_id').val(datalist_id);
     $('#datalist_data').val(datalist_data);
+    $('#field_data').val(field_data);
 
 
    
@@ -658,6 +660,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       break;
 
       case 'field_data':
+        update_fielddata(current_field_index, field_id);
       break;
 
       case 'help_text':
@@ -766,6 +769,14 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('#' + datalist_id).empty();
     $('#' + datalist_id).append(fragment);
     form_fields.fields[current_field_index].datalist_data = datalist_data;
+  }
+
+  function update_fielddata(current_field_index, field_id){
+    var field_data = $.trim($('#field_data').val());
+    var field_data_o = JSON.parse(field_data);
+
+    $('#' + field_id).data(field_data_o);
+    form_fields.fields[current_field_index].field_data = field_data;
   }
 
 
