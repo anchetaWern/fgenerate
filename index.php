@@ -168,7 +168,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             </div>
         </div>
 
-        <div class="text select textarea control-group">
+        <div class="text select textarea control-group email url number">
             <label for="input_required" class="control-label">Required</label>
             <div class="controls">
               <input type="checkbox" name="input_required" id="input_required"/>
@@ -275,6 +275,33 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       </div>
   </script><!--/#input_text-->
 
+  <script id="input_email" type="text/html">
+    <div class="control-group">
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="email" id="{{input_id}}" class="edit_field" autocomplete="off">
+          </div>
+      </div>
+  </script><!--/#input_email-->
+
+  <script id="input_url" type="text/html">
+    <div class="control-group">
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="url" id="{{input_id}}" class="edit_field" autocomplete="off">
+          </div>
+      </div>
+  </script><!--/#input_url-->
+
+  <script id="input_hidden" type="text/html">
+    <div class="control-group">
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="hidden" id="{{input_id}}" class="edit_field">
+          </div>
+      </div>
+  </script><!--/#input_hidden-->
+
 
   <script id="input_checkbox" type="text/html">
     <div class="control-group">
@@ -309,6 +336,16 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     </div>
   </script><!--/#input_textarea-->
 
+  <script id="input_number" type="text/html">
+    <div class="control-group">
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="number" id="{{input_id}}" class="edit_field">
+          </div>
+      </div>
+  </script><!--/#input_number-->
+
+
 
   <script id="input_select" type="text/html">
    <div class="control-group">
@@ -324,40 +361,55 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   </script><!--/#input_select-->
 
 
-  <script id="input_prepend" type="text/html">
+   <script id="input_date" type="text/html">
     <div class="control-group">
-      <label class="control-label" contenteditable="true">{{input_id}}</label>
-      <div class="controls">
-      <div class="input-prepend">
-          <span class="add-on">{{prepend_text}}</span><input class="span2" id="{{input_id}}" size="{{size}}" type="{{type}}" autocomplete="off">
-        </div>
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="date" id="{{input_id}}" class="edit_field">
+          </div>
       </div>
-    </div> 
-  </script><!--/#input_prepend-->
+  </script><!--/#input_date-->
 
-
-  <script id="input_append" type="text/html">
+    <script id="input_datetime" type="text/html">
     <div class="control-group">
-      <label class="control-label" contenteditable="true">{{input_id}}</label>
-      <div class="controls">
-        <div class="input-append">
-            <input class="span2" id="{{input_id}}" type="{{type}}" autocomplete="off"><span class="add-on">{{append_text}}</span>
-        </div>
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="datetime" id="{{input_id}}" class="edit_field">
+          </div>
       </div>
-    </div>
-  </script><!--/#input_append-->
+  </script><!--/#input_datetime-->
 
 
-  <script id="input_combined" type="text/html">
-  <div class="control-group">
-    <label class="control-label" contenteditable="true">{{input_id}}</label>
-    <div class="controls">
-      <div class="input-prepend input-append">
-        <span class="add-on">{{prepend_text}}</span><input class="span2" id="{{id}}" type="{{type}}" autocomplete="off"><span class="add-on">{{append_text}}</span>
+    <script id="input_week" type="text/html">
+    <div class="control-group">
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="week" id="{{input_id}}" class="edit_field">
+          </div>
       </div>
-    </div>
-  </div> 
-  </script><!--/#input_combined-->
+  </script><!--/#input_week-->
+
+    <script id="input_time" type="text/html">
+    <div class="control-group">
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="time" id="{{input_id}}" class="edit_field">
+          </div>
+      </div>
+  </script><!--/#input_time-->
+
+    <script id="input_range" type="text/html">
+    <div class="control-group">
+        <label class="control-label" contenteditable="true">{{input_id}}</label>
+          <div class="controls">
+            <input type="range" id="{{input_id}}" class="edit_field">
+          </div>
+      </div>
+  </script><!--/#input_range-->
+
+   <script id="input_button" type="text/html">
+      <button type="submit" class="btn">{{input_value}}</button>
+  </script><!--/#input_button-->
 
   <script id="input_helptext" type="text/html">
    <span class="help-inline" contenteditable>{{help_text}}</span>
