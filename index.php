@@ -65,7 +65,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     <h4 id="tbl_label">Database</h4>  
     <div id="database_info">
       <form method="post" action="index.php">
-        <p>
+       
         <label for="db">Database:</label>
         <?php
         if($databases->num_rows > 0){ ?>
@@ -81,10 +81,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         <?php
         }
         ?>
-        </p>
-        <p>
         <button type="button" id="btn_connect" class="btn btn-primary">Connect</button>
-        </p>
       </form>
     </div>
     
@@ -244,7 +241,19 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         <h3>Fetch Data</h3>
       </div>
       <div class="modal-body">
-          
+        <div class="all_type control-group">
+            <label for="field_data" class="control-label">Query</label>
+            <div class="controls">
+              <textarea id="query" name="query" style="margin: 0px 0px 9px; width: 516px; height: 171px;"></textarea>
+
+              <span>Fields</span>
+              <div id="selected_fields">
+                
+
+              </div><!--/#selected_fields--> 
+            </div>
+        </div>
+       
       </div><!--/.modal_body-->
 
       <div class="modal-footer">
@@ -864,6 +873,39 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('#' + input_id).data(data).addClass('edit_field');
     
     update_input_class(input_index, input_id);
+  });
+
+  $('.modal-footer').on('click', '#btn_updatefield', function(){
+    var query = $.trim($('#query').val());
+    var database = $.trim($('#db').val());
+    var fields_container = $('#selected_fields');
+    fields_container.empty();
+
+    var fragment = document.createDocumentFragment();
+
+    $.post('invoker.php', {'action' : 3, 'db' : database,  'query' : query}, function(data){
+      var data_obj = JSON.parse(data);
+      var fields = data_obj['fields'];
+      var field_len = fields.length;
+
+      var rows = data_obj['rows'];
+
+      window.ice =  fields;
+      window.water = rows;
+      for(var x =0; x < field_len; x++){
+        var field_name = fields[x];
+        var field_label = $("<label>");
+        var field_checkbox = $("<input>").attr({"type" : "checkbox", "id" : field_name});
+        var field_span = $("<span>").text(field_name);
+        
+        field_label.append(field_checkbox[0]);
+        field_label.append(field_span[0]);
+
+        fragment.appendChild(field_label[0]);    
+      }
+
+      fields_container.append(fragment);
+    });
   });
 
   $('#btn_generate').on(function(){

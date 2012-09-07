@@ -53,6 +53,29 @@ switch($action){
 		echo json_encode($fields);
 	
 	break;
+
+	case 3: //get data using query
+		$query_string = $_POST['query'];
+		$query = $dbt->query($query_string);
+		
+		//get data
+		$rows = [];
+		while($row = $query->fetch_row()){
+			$rows[] = $row;
+		}
+
+		//get field info
+		$field_info = $query->fetch_fields();
+		$fields = [];
+	    foreach ($field_info as $val) {
+	       $fields[] = $val->name;
+	      
+	    }
+
+	    //merge rows and fields
+	    $data = array('rows'=>$rows, 'fields'=>$fields);
+		echo json_encode($data);
+	break;
 	
 }
 ?>
