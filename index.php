@@ -117,8 +117,6 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
               <option value="textarea">textarea</option>
               <option value="number">number</option>
               <option value="date">date</option>
-              <option value="datetime">datetime</option>
-              <option value="week">week</option>
               <option value="time">time</option>
               <option value="range">range</option>
               <option value="button">button</option>
@@ -140,7 +138,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             </div>
         </div>
 
-        <div class="number control-group">
+        <div class="number range control-group">
             <label for="input_step" class="control-label">Step</label>
             <div class="controls">
              <input type="number" name="input_step" id="input_step" class="input-mini"/>
@@ -154,35 +152,35 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             </div>
         </div>
 
-        <div class="text radio checkbox select textarea control-group">
+        <div class="all_type no_hidden control-group">
             <label for="help_text" class="control-label">Help Text</label>
             <div class="controls">
               <input type="text" name="help_text" id="help_text" class="input-xlarge"/>
             </div>
         </div>
 
-        <div class="text email control-group">
+        <div class="text email url control-group">
             <label for="pattern_text" class="control-label">Pattern</label>
             <div class="controls">
               <input type="text" name="pattern_text" id="pattern_text" class="input-xlarge"/>
             </div>
         </div>
 
-        <div class="text select textarea control-group email url number">
+        <div class="text textarea email url control-group">
             <label for="input_required" class="control-label">Required</label>
             <div class="controls">
               <input type="checkbox" name="input_required" id="input_required"/>
             </div>
         </div>
 
-        <div class="text select textarea control-group">
+        <div class="text textarea email url control-group">
             <label for="input_readonly" class="control-label">Read-only</label>
             <div class="controls">
               <input type="checkbox" name="input_readonly" id="input_readonly"/>
             </div>
         </div>
 
-        <div class="text email number radio checkbox select textarea control-group">
+        <div class="all_type control-group">
             <label for="field_data" class="control-label">Field Data</label>
             <div class="controls">
               <textarea id="field_data" name="field_data" style="margin-left: 0px; margin-right: 0px; width: 363px; "></textarea>
@@ -190,7 +188,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             </div>
         </div>
 
-        <div class="text email control-group">    
+        <div class="text email url control-group">    
             <label for="placeholder_text" class="control-label">Placeholder</label>
             <div class="controls">
              <input type="text" name="placeholder_text" id="placeholder_text" class="input-xlarge"/>
@@ -205,14 +203,14 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             </div>
         </div>
 
-        <div class="text email control-group">
+        <div class="text url control-group">
             <label for="datalist_id" class="control-label">Datalist ID</label>
             <div class="controls">
               <input type="text" name="datalist_id" id="datalist_id"/>
             </div>
           </div>
 
-          <div class="text email control-group">
+          <div class="text url control-group">
             <label for="datalist_data" class="control-label">Datalist Data</label>
             <div class="controls">
               <textarea id="datalist_data" name="datalist_data" style="margin-left: 0px; margin-right: 0px; width: 363px;"></textarea>
@@ -220,7 +218,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             </div>
         </div>
             
-        <div class="text email number radio checkbox select textarea control-group">    
+        <div class="all_type control-group">    
             <label for="classes" class="control-label">Classes</label>
             <div class="controls">
               <input type="text" name="classes" id="classes" class="input-large"/>
@@ -294,12 +292,12 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   </script><!--/#input_url-->
 
   <script id="input_hidden" type="text/html">
-    <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="hidden" id="{{input_id}}" class="edit_field">
-          </div>
-      </div>
+    <div class="control-group" style="display:none;">
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
+        <div class="controls">
+          <input type="hidden" id="{{input_id}}" class="edit_field">
+        </div>
+    </div>
   </script><!--/#input_hidden-->
 
 
@@ -370,30 +368,11 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       </div>
   </script><!--/#input_date-->
 
-    <script id="input_datetime" type="text/html">
-    <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="datetime" id="{{input_id}}" class="edit_field">
-          </div>
-      </div>
-  </script><!--/#input_datetime-->
-
-
-    <script id="input_week" type="text/html">
-    <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="week" id="{{input_id}}" class="edit_field">
-          </div>
-      </div>
-  </script><!--/#input_week-->
-
     <script id="input_time" type="text/html">
     <div class="control-group">
         <label class="control-label" contenteditable="true">{{input_id}}</label>
           <div class="controls">
-            <input type="time" id="{{input_id}}" class="edit_field">
+            <input type="time" id="{{input_id}}" class="edit_field input-medium">
           </div>
       </div>
   </script><!--/#input_time-->
@@ -705,6 +684,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
 
       case 'select_options_data':
+        update_selectoptions_data(current_field_index, field_id);
       break;
 
       case 'placeholder_text':
@@ -831,6 +811,24 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     form_fields.fields[current_field_index].field_data = field_data;
   }
 
+  function update_selectoptions_data(current_field_index, field_id){
+    var options_data = $.trim($('#select_options_data').val());
+    var options_data_o = JSON.parse(options_data);
+
+    var fragment = document.createDocumentFragment();
+    for(var prop in options_data_o){
+      var data = options_data_o[prop];
+      for(var n = 0; len = data.length, n < len; n++){
+
+        if(prop === 'values'){//values contains the values that will be used in the options
+          var option_value = options_data_o[prop][n];
+          var option = $("<option>").val(option_value).text(option_value);
+        }
+       
+      }
+    }
+  }
+
 
 
   $('#form_customizer').on('change', '#data_type', function(){
@@ -839,7 +837,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     //change fields in the form customizer
     $('#form_customizer .control-group').hide();
     $('.all_type').show();
-    $('.'+field_type).show();
+    $('.' + field_type).show();
+    $('.no_' + field_type).hide();
 
     //change the current field into selected field
     var input_index = input_config.current_field_index;
