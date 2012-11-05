@@ -1,5 +1,0 @@
-Current plans:
- -generating/customizing forms
- -generating/customizing tables
- -automatic adding of client-side validation code
- -plain object-oriented code for server-side validation and code for CRUD but planning to add codeIgniter code generation.

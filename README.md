@@ -27,18 +27,11 @@ define('PASSWORD', '1234');
 
 Navigate to ```127.0.0.1:8020/fgenerate``` change the following address to match the configuration in your machine.
 
-If the database info that you supplied is correct you will see something like the one below once you click on the connect button:
-
-![fgenerate](fgenerate/blob/master/assets/fgenerate.PNG)
-
+If the database info that you supplied is correct you will be able to see some tables from the database once you click on the connect button:
 
 Then start selecting the tables that you're going to use for the form and then the fields for the tables.
 
-![fields](fgenerate/blob/master/assets/fields.PNG)
-
 Once you're done with that you can start customizing the form to your liking.
-
-![customizeform](fgenerate/blob/master/assets/customize.PNG)
 
 
 ##Defaults
