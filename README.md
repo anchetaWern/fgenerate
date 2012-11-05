@@ -29,16 +29,16 @@ Navigate to ```127.0.0.1:8020/fgenerate``` change the following address to match
 
 If the database info that you supplied is correct you will see something like the one below once you click on the connect button:
 
-![fgenerate](assets/fgenerate.PNG)
+![fgenerate](blob/master/assets/fgenerate.PNG)
 
 
 Then start selecting the tables that you're going to use for the form and then the fields for the tables.
 
-![fields](assets/fields.PNG)
+![fields](blob/master/assets/fields.PNG)
 
 Once you're done with that you can start customizing the form to your liking.
 
-![customizeform](assets/customize.PNG)
+![customizeform](blob/master/assets/customize.PNG)
 
 
 ##Defaults
