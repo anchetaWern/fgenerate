@@ -290,37 +290,37 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   <!--templates-->
   <script id="input_text" type="text/html">
     <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="text" id="{{input_id}}" class="edit_field" autocomplete="off">
-          </div>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
+        <div class="controls">
+          <input type="text" id="{{input_id}}" class="edit_field" autocomplete="off">
+        </div>
     </div>
   </script><!--/#input_text-->
 
   <script id="input_email" type="text/html">
     <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-		<div class="controls">
-			<input type="email" id="{{input_id}}" class="edit_field" autocomplete="off">
-		</div>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
+  		<div class="controls">
+  			<input type="email" id="{{input_id}}" class="edit_field" autocomplete="off">
+  		</div>
     </div>
   </script><!--/#input_email-->
 
   <script id="input_url" type="text/html">
     <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="url" id="{{input_id}}" class="edit_field" autocomplete="off">
-          </div>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+        <input type="url" id="{{input_id}}" class="edit_field" autocomplete="off">
       </div>
+    </div>
   </script><!--/#input_url-->
 
   <script id="input_hidden" type="text/html">
     <div class="control-group" style="display:none;">
       <label class="control-label" contenteditable="true">{{input_id}}</label>
-        <div class="controls">
-          <input type="hidden" id="{{input_id}}" class="edit_field">
-        </div>
+      <div class="controls">
+        <input type="hidden" id="{{input_id}}" class="edit_field">
+      </div>
     </div>
   </script><!--/#input_hidden-->
 
@@ -340,10 +340,10 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   <script id="input_radio" type="text/html">
     <div class="control-group">
       <div class="controls">
-      <label class="radio control-label" contenteditable="true">
-        <input type="radio" id="{{input_id}}" name="{{name}}" class="edit_field" value="{{value}}">
-          {{input_id}}
-      </label>
+        <label class="radio control-label" contenteditable="true">
+          <input type="radio" id="{{input_id}}" name="{{name}}" class="edit_field" value="{{value}}">
+            {{input_id}}
+        </label>
       </div>
     </div>
   </script><!--/#input_radio-->
@@ -366,8 +366,6 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       </div>
     </div>
   </script><!--/#input_number-->
-
-
 
   <script id="input_select" type="text/html">
    <div class="control-group">
