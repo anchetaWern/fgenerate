@@ -205,9 +205,9 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             <div class="controls">
               <input type="text" name="datalist_id" id="datalist_id"/>
             </div>
-          </div>
+        </div>
 
-          <div class="text url control-group">
+        <div class="text url control-group">
             <label for="datalist_data" class="control-label">Datalist Data</label>
             <div class="controls">
               <textarea id="datalist_data" name="datalist_data" style="margin-left: 0px; margin-right: 0px; width: 363px;"></textarea>
@@ -223,7 +223,16 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         </div>    
       </form>
     </div><!--/#form_customizer-->
+	
+	
     </div>
+	
+	<h5>HTML</h5>
+	<div id="html_container">
+		<div style="position:relative;">
+
+		<pre id="htmlcode"></pre>
+	</div>
     <button type="button" id="btn_generate" class="btn" style="display:none;">Generate</buton>
 
     <div id="database_data">
@@ -271,6 +280,12 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
   <script src="js/mustache.js"></script>
   <script src="js/config.js"></script>
 
+  
+  <script>
+  var update_htmlstring = function(){
+	$('#htmlcode').text($('#form').html());
+  };
+  </script>
 
   <!--templates-->
   <script id="input_text" type="text/html">
@@ -279,16 +294,16 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
           <div class="controls">
             <input type="text" id="{{input_id}}" class="edit_field" autocomplete="off">
           </div>
-      </div>
+    </div>
   </script><!--/#input_text-->
 
   <script id="input_email" type="text/html">
     <div class="control-group">
         <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="email" id="{{input_id}}" class="edit_field" autocomplete="off">
-          </div>
-      </div>
+		<div class="controls">
+			<input type="email" id="{{input_id}}" class="edit_field" autocomplete="off">
+		</div>
+    </div>
   </script><!--/#input_email-->
 
   <script id="input_url" type="text/html">
@@ -345,11 +360,11 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   <script id="input_number" type="text/html">
     <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="number" id="{{input_id}}" class="edit_field">
-          </div>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+        <input type="number" id="{{input_id}}" class="edit_field">
       </div>
+    </div>
   </script><!--/#input_number-->
 
 
@@ -358,49 +373,49 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
    <div class="control-group">
     <label class="control-label edit_field" contenteditable="true">{{input_id}}</label>
       <div class="controls">
-      <select id="{{input_id}}">
-      {{#option}}
-        <option value="{{option_text}}">{{option_text}}</option>
-      {{/option}}
-      </select>
+        <select id="{{input_id}}">
+        {{#option}}
+          <option value="{{option_text}}">{{option_text}}</option>
+        {{/option}}
+        </select>
       </div>
     </div>
   </script><!--/#input_select-->
 
 
-   <script id="input_date" type="text/html">
+  <script id="input_date" type="text/html">
     <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="date" id="{{input_id}}" class="edit_field">
-          </div>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+        <input type="date" id="{{input_id}}" class="edit_field">
       </div>
+    </div>
   </script><!--/#input_date-->
 
-    <script id="input_time" type="text/html">
+  <script id="input_time" type="text/html">
     <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="time" id="{{input_id}}" class="edit_field input-medium">
-          </div>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+        <input type="time" id="{{input_id}}" class="edit_field input-medium">
       </div>
+    </div>
   </script><!--/#input_time-->
 
-    <script id="input_range" type="text/html">
+  <script id="input_range" type="text/html">
     <div class="control-group">
-        <label class="control-label" contenteditable="true">{{input_id}}</label>
-          <div class="controls">
-            <input type="range" id="{{input_id}}" class="edit_field">
-          </div>
+      <label class="control-label" contenteditable="true">{{input_id}}</label>
+      <div class="controls">
+        <input type="range" id="{{input_id}}" class="edit_field">
       </div>
+    </div>
   </script><!--/#input_range-->
 
-   <script id="input_button" type="text/html">
-      <button type="submit" class="btn">{{input_value}}</button>
+  <script id="input_button" type="text/html">
+    <button type="submit" class="btn">{{input_value}}</button>
   </script><!--/#input_button-->
 
   <script id="input_helptext" type="text/html">
-   <span class="help-inline" contenteditable>{{help_text}}</span>
+    <span class="help-inline" contenteditable>{{help_text}}</span>
   </script><!--/#input_helptext-->
 
   <script id="input_datalist" type="text/html">
@@ -505,6 +520,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             new_container[0].appendChild(fragment);
             field_container[0].appendChild(new_container[0]);
             $('#fields, #fields_label').show();
+			update_htmlstring();
           }
         );
       }
@@ -587,7 +603,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         form_fields.fields[number_of_fields][attr] = attr_value;
       });
 
-
+	update_htmlstring();
     }
   });
 
@@ -649,7 +665,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('#datalist_data').val(datalist_data);
     $('#field_data').val(field_data);
 
-
+	update_htmlstring();
    
   });
   
@@ -670,6 +686,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       break;
 
     }
+	
+	update_htmlstring();
   });
 
   $('#form_customizer').on('blur', 'input, textarea, select', function(){
@@ -730,6 +748,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       case 'input_multiple':
       break;
     }
+	
+	update_htmlstring();
   });
 
   function update_input_class(current_field_index, field_id){
@@ -873,6 +893,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('#' + input_id).data(data).addClass('edit_field');
     
     update_input_class(input_index, input_id);
+	update_htmlstring();
   });
 
   $('.modal-footer').on('click', '#btn_updatefield', function(){
