@@ -8,11 +8,11 @@
 }
 
 #main_container > div{
-	width: 100%;
-	float: left;
-	padding: 20px;
-	border-radius: 5px;
-	margin-bottom: 20px;
+    width: 100%;
+    float: left;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
     border: 2px solid black;
 }
 
@@ -28,7 +28,7 @@
 }
 
 li{
-	list-style: none;
+    list-style: none;
 }
 
 input[type=checkbox]{
@@ -37,7 +37,7 @@ input[type=checkbox]{
 
 .radio{
 
-	padding-left:0px;
+    padding-left:0px;
 }
 
 #form_customizer {
