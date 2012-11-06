@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <?php
 require_once('conn.php');
 
-$databases = $db->query("SELECT DISTINCT SCHEMA_NAME
-    FROM INFORMATION_SCHEMA.SCHEMATA");
+$databases = $db->query("
+    SELECT DISTINCT SCHEMA_NAME
+    FROM INFORMATION_SCHEMA.SCHEMATA
+");
 ?>
 <html lang="en">
   <head>
@@ -222,6 +223,8 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             </div>
         </div>    
       </form>
+
+      <button type="button" id="generate_html" class="btn btn-success">Generate HTML</button>
     </div><!--/#form_customizer-->
 	
 	
@@ -255,11 +258,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             <div class="controls">
               <textarea id="query" name="query" style="margin: 0px 0px 9px; width: 516px; height: 171px;"></textarea>
 
-              <span>Fields</span>
-              <div id="selected_fields">
-                
 
-              </div><!--/#selected_fields--> 
             </div>
         </div>
        
@@ -282,9 +281,20 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
   
   <script>
+  $("#generate_html").click(function(){
+    update_htmlstring();
+  });
+
   var update_htmlstring = function(){
-	$('#htmlcode').text($('#form').html());
+    var html_str = removeTemplateAttributes();
+  	$('#htmlcode').text(html_str);
   };
+
+  var removeTemplateAttributes = function(){
+    var html_str = $('#form').html();
+    html_str = html_str.replace(/(contenteditable="true"|class="edit_field"|contenteditable="")/gi, "");
+    return html_str;
+  }
   </script>
 
   <!--templates-->
@@ -518,7 +528,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
             new_container[0].appendChild(fragment);
             field_container[0].appendChild(new_container[0]);
             $('#fields, #fields_label').show();
-			update_htmlstring();
+			
           }
         );
       }
@@ -601,7 +611,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
         form_fields.fields[number_of_fields][attr] = attr_value;
       });
 
-	update_htmlstring();
+	
     }
   });
 
@@ -662,8 +672,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('#datalist_id').val(datalist_id);
     $('#datalist_data').val(datalist_data);
     $('#field_data').val(field_data);
-
-	update_htmlstring();
+    
    
   });
   
@@ -685,7 +694,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
 
     }
 	
-	update_htmlstring();
+    
   });
 
   $('#form_customizer').on('blur', 'input, textarea, select', function(){
@@ -747,7 +756,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
       break;
     }
 	
-	update_htmlstring();
+    
   });
 
   function update_input_class(current_field_index, field_id){
@@ -891,7 +900,7 @@ $databases = $db->query("SELECT DISTINCT SCHEMA_NAME
     $('#' + input_id).data(data).addClass('edit_field');
     
     update_input_class(input_index, input_id);
-	update_htmlstring();
+	
   });
 
   $('.modal-footer').on('click', '#btn_updatefield', function(){
