@@ -46,15 +46,16 @@
 
 
   $('#tables').on('click', '.tables', function(){
+    var database = $.trim($('#db').val());
+    var tbl      = $(this).attr('name');
+
     if($(this).attr('checked')){
-      var database = $.trim($('#db').val());
-      var tbl      = $(this).attr('name');
 
       if($('#'+tbl).length == 0){
 
         var field_container = $('#fields');
-        var new_container   = $("<div>").addClass("fields_container");
-        var table_header    = $("<span>").attr({"class" : "tbl_header", "id" : tbl}).text(tbl);
+        var new_container   = $("<div>").addClass("fields_container").attr("id" , tbl);
+        var table_header    = $("<span>").attr({"class" : "tbl_header"}).text(tbl);
 
         new_container[0].appendChild(table_header[0]);
 
@@ -74,7 +75,7 @@
               var length       = field['length'];
 
               var new_li = $("<li>");
-              var new_box = $("<input>").attr({"type" : "checkbox", "name" : field_name, "class" : "fields"})
+              var new_box = $("<input>").attr({"type" : "checkbox", "name" : field_name, "class" : "fields", "data-field" : tbl + "." + field_name})
                 .data({
                   "table" : tbl, "type" : data_type, "default" : default_data, "key" : column_key, 
                   "nullable" : nullable, "length" : length, "id" : field_name
@@ -98,22 +99,41 @@
           }
         );
       }
+    }else{
+      
+      if($('#fields').children().length == 0){
+        $('#fields, #fields_label').hide();
+      }
+      
+      removeTableFields(tbl);
+      $('#' + tbl).remove();
     }
     
   });
 
+  var removeTableFields = function(tableID){
+    $('#' + tableID + ' input[type=checkbox]').each(function(){
+      var data_field = $(this).data('field');
+      var query = "div[data-field='" + data_field + "']";
+      $('#form').find(query).remove();
+    });
+  };
+
 
 
   $('#fields').on('click', '.fields', function(){
+    var form_container = $('#form');
+
+    var fragment = document.createDocumentFragment();
+
+
+    var input = $(this);
+    var data_id = input.data('id');
+    var data_table   = input.data('table');
+    var data_field   = data_table + "." + data_id;
+
     if($(this).attr('checked')){  
-      var form_container = $('#form');
-
-      var fragment = document.createDocumentFragment();
-
-
-      var input = $(this);
-      var data_id = input.data('id');
-
+    
       if(check_elementID(data_id)){
         data_id = get_elementID(data_id);
       }
@@ -122,10 +142,8 @@
       var data_key     = input.data('key');
       var data_length  = input.data('length');
       var data_type    = $.trim(input.data('type'));
-      var data_table   = input.data('table');
       var data_index   = form_container.children().length; 
-
-    
+     
 
       var form_type;
       if(textbox.indexOf(data_type) > -1){
@@ -145,13 +163,15 @@
         'data_type' : data_type,
         'data_table' : data_table,
         'form_type' : form_type,
-        'data_index' : data_index
+        'data_index' : data_index,
+        'data_field' : data_field
       };
 
       var content;
       var content_data = {
         'label_id' : data_id + data_type,
-        'input_id' : data_id
+        'input_id' : data_id,
+        'data_field' : data_field
       };
       
       content = Mustache.to_html($('#input_' + form_type).html(), content_data);
@@ -178,6 +198,10 @@
       });
 
 	
+    }else{
+      console.log(data_field);
+      var query = "div[data-field='" + data_field + "']";
+      $('#form').find(query).remove();
     }
   });
 
@@ -505,3 +529,20 @@
   $('#btn_generate').on(function(){
     var new_form = $("<form>").attr({"method" : "post", "action" : form_action, "class" : "horizontal"});
   });
+
+  $("#generate_html").click(function(){
+    update_htmlstring();
+  });
+
+  var update_htmlstring = function(){
+    var html_str = removeTemplateAttributes();
+    $('#htmlcode').text(html_str);
+  };
+
+  var removeTemplateAttributes = function(){
+    var html_str = $.trim($('#form').html());
+    html_str = html_str.replace(/(contenteditable="true"|class="edit_field"|contenteditable="")/gi, "");
+    return html_str;
+  }
+
+  $('#form').sortable();

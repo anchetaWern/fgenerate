@@ -43,12 +43,14 @@ input[type=checkbox]{
 #form_customizer {
     float: right;
     padding: 10px;
-    border-left: 2px solid black;
     border-radius: 0px;
+    border-bottom: 2px solid black;
 }
 
 #form{
     float: left;
+    border-right: 2px solid black;
+    padding-right: 120px;
 }
 
 #btn_connect {
@@ -57,4 +59,8 @@ input[type=checkbox]{
 #db {
     float: left;
     margin-right: 10px;
+}
+
+#generate_html {
+    float: right;
 }
